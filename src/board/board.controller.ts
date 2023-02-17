@@ -8,28 +8,24 @@ import {
   Put,
 } from '@nestjs/common';
 import { BoardService } from './board.service';
-import { CreateArticleDto } from './create-article.dto';
-import { DeleteArticleDto } from './delete-article.dto';
-import { UpdateArticleDto } from './update-article.dto';
+import { CreateArticleDto } from './dto/create-article.dto';
+import { DeleteArticleDto } from './dto/delete-article.dto';
+import { UpdateArticleDto } from './dto/update-article.dto';
 
-@Controller('board') // routing path is /board
+@Controller('board')
 export class BoardController {
-  // 서비스 주입
   constructor(private readonly boardService: BoardService) {}
 
-  // 게시물 목록을 가져오는 api
-  @Get('articles')
-  getArticles() {
-    return this.boardService.getArticles();
+  @Get('/articles')
+  async getArticles() {
+    return await this.boardService.getArticles();
   }
 
-  // 게시물 상세보기 -> 게시물 ID로
   @Get('/articles/:id')
-  getArticleById(@Param('id') articleId: number) {
-    return this.boardService.getArticleById(articleId);
+  async getArticleById(@Param('id') articleId: number) {
+    return await this.boardService.getArticleById(articleId);
   }
 
-  // 게시글 작성
   @Post('/articles')
   createArticle(@Body() data: CreateArticleDto) {
     return this.boardService.createArticle(
@@ -39,13 +35,12 @@ export class BoardController {
     );
   }
 
-  // 게시물 수정
   @Put('/articles/:id')
-  updateArticle(
+  async updateArticle(
     @Param('id') articleId: number,
     @Body() data: UpdateArticleDto,
   ) {
-    return this.boardService.updateArticle(
+    return await this.boardService.updateArticle(
       articleId,
       data.title,
       data.content,
@@ -53,12 +48,11 @@ export class BoardController {
     );
   }
 
-  // 게시물 삭제
   @Delete('/articles/:id')
-  deleteArticle(
+  async deleteArticle(
     @Param('id') articleId: number,
     @Body() data: DeleteArticleDto,
   ) {
-    return this.boardService.deleteArticle(articleId, data.password);
+    return await this.boardService.deleteArticle(articleId, data.password);
   }
 }
